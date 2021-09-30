@@ -5,7 +5,7 @@ pipeline{
      maven 'mymaven'
      }
      
-    agent any
+    agent {lable 'Slave1'}
     
     stages{
         
