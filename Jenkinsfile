@@ -53,6 +53,26 @@ pipeline{
                     echo 'Welldone pipeline is completed'
                 }
             }
+        stage ('Deployment'){
+            steps {
+                sh script: '''rm -rf Deploy
+mkdir Deploy
+cd Deploy 
+cp /var/lib/jenkins/workspace/5.Package/target/addressbook.war .
+touch dockerfile
+cat <<EOT>> dockerfile
+FROM tomcat:9
+MAINTAINER AJAY
+ADD addressbook.war /usr/local/tomcat/webapps
+CMD ["catalina.sh", "run"]
+EXPOSE 8080
+EOT
+
+sudo docker build -t mywebapp:$BUILD_NUMBER .
+
+sudo docker run -itd -P mywebapp:$BUILD_NUMBER'''
         }
+}
+    }
 }
     
